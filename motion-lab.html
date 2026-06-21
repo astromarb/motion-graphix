@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Motion Lab Prototype</title>
+    <link rel="icon" href="data:," />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="motion-lab.css" />
+  </head>
+  <body>
+    <div class="app-shell" data-playing="false">
+      <aside class="tool-rail" aria-label="Primary tools">
+        <a class="lab-mark" href="motion-lab.html" aria-label="Motion Lab home">
+          <span>NL</span>
+          <i></i>
+        </a>
+        <nav class="rail-tools" aria-label="Tool groups">
+          <button class="rail-button is-active" type="button" aria-label="Layers">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5-9 5-9-5 9-5Z" /><path d="m3 12 9 5 9-5" /><path d="m3 17 9 5 9-5" /></svg>
+          </button>
+          <button class="rail-button" type="button" aria-label="Text">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14" /><path d="M12 5v14" /><path d="M9 19h6" /></svg>
+          </button>
+          <button class="rail-button" type="button" aria-label="Media">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="14" rx="2" /><path d="m8 15 3-3 2 2 3-4 3 5" /></svg>
+          </button>
+          <button class="rail-button" type="button" aria-label="World">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8" /><path d="M4 12h16" /><path d="M12 4a12 12 0 0 1 0 16" /><path d="M12 4a12 12 0 0 0 0 16" /></svg>
+          </button>
+          <button class="rail-button" type="button" aria-label="Effects">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v4" /><path d="M12 17v4" /><path d="M3 12h4" /><path d="M17 12h4" /><path d="m5.6 5.6 2.8 2.8" /><path d="m15.6 15.6 2.8 2.8" /><path d="m18.4 5.6-2.8 2.8" /><path d="m8.4 15.6-2.8 2.8" /></svg>
+          </button>
+          <button class="rail-button" type="button" aria-label="Audio">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l10-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="16" cy="16" r="3" /></svg>
+          </button>
+          <button class="rail-button" type="button" aria-label="Code">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 9-4 3 4 3" /><path d="m16 9 4 3-4 3" /><path d="m14 5-4 14" /></svg>
+          </button>
+        </nav>
+        <button class="rail-button rail-bottom" type="button" aria-label="Settings">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3" /><path d="M12 2v3" /><path d="M12 19v3" /><path d="M2 12h3" /><path d="M19 12h3" /><path d="m4.9 4.9 2.1 2.1" /><path d="m17 17 2.1 2.1" /><path d="m19.1 4.9-2.1 2.1" /><path d="m7 17-2.1 2.1" /></svg>
+        </button>
+      </aside>
+
+      <aside class="layers-panel panel" aria-label="Layers">
+        <div class="project-switcher">
+          <button class="project-button" type="button" aria-label="Project menu">
+            <span>Motion Lab</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5" /></svg>
+          </button>
+        </div>
+        <div class="panel-head">
+          <h2>Layers</h2>
+          <div class="icon-cluster">
+            <button class="icon-button" type="button" aria-label="Add layer">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14" /><path d="M5 12h14" /></svg>
+            </button>
+            <button class="icon-button" type="button" aria-label="Layer options">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16" /><path d="M4 12h16" /><path d="M4 17h16" /></svg>
+            </button>
+          </div>
+        </div>
+        <button class="scene-button" type="button">
+          <span>Scene 03</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5" /></svg>
+        </button>
+        <div class="layer-list" aria-label="Scene layer list">
+          <button class="layer-row" type="button" data-layer="Camera 1">
+            <span class="layer-eye"></span><span class="layer-icon camera"></span><span>Camera 1</span><span class="lock"></span>
+          </button>
+          <button class="layer-row" type="button" data-layer="Light Orbit">
+            <span class="layer-eye"></span><span class="layer-icon ring"></span><span>Light Orbit</span><i class="swatch amber"></i>
+          </button>
+          <button class="layer-row is-open is-selected" type="button" data-layer="Orbit Title">
+            <span class="layer-eye"></span><span class="layer-icon text">T</span><span>Orbit Title</span><span class="key-dot"></span>
+          </button>
+          <button class="layer-row child" type="button" data-layer="ORBIT">
+            <span></span><span class="layer-icon text">T</span><span>ORBIT</span>
+          </button>
+          <button class="layer-row child" type="button" data-layer="TITLE">
+            <span></span><span class="layer-icon text">T</span><span>TITLE</span>
+          </button>
+          <button class="layer-row child" type="button" data-layer="Subtitle">
+            <span></span><span class="layer-icon text">T</span><span>Subtitle</span><i class="swatch violet"></i>
+          </button>
+          <button class="layer-row" type="button" data-layer="Orbit Rings">
+            <span class="layer-eye"></span><span class="layer-icon ring"></span><span>Orbit Rings</span><span class="key-dot"></span>
+          </button>
+          <button class="layer-row" type="button" data-layer="Planet">
+            <span class="layer-eye"></span><span class="layer-icon planet"></span><span>Planet</span><i class="swatch cyan"></i>
+          </button>
+          <button class="layer-row" type="button" data-layer="Stars">
+            <span class="layer-eye"></span><span class="layer-icon spark"></span><span>Stars</span><i class="swatch violet"></i>
+          </button>
+          <button class="layer-row" type="button" data-layer="Constellation Lines">
+            <span class="layer-eye"></span><span class="layer-icon path"></span><span>Constellation Lines</span><i class="swatch violet"></i>
+          </button>
+          <button class="layer-row" type="button" data-layer="Glow">
+            <span class="layer-eye"></span><span class="layer-icon spark"></span><span>Glow</span><i class="swatch amber"></i>
+          </button>
+          <button class="layer-row" type="button" data-layer="BG Gradient">
+            <span class="layer-eye"></span><span class="layer-icon box"></span><span>BG Gradient</span><span class="lock"></span>
+          </button>
+        </div>
+        <div class="panel-footer">
+          <button class="footer-button" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14" /><path d="M5 12h14" /></svg>
+            <span>Track</span>
+          </button>
+          <button class="icon-button" type="button" aria-label="Open folder">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h7l2 2h9v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z" /></svg>
+          </button>
+          <button class="icon-button" type="button" aria-label="Delete">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16" /><path d="M10 11v6" /><path d="M14 11v6" /><path d="m6 7 1 14h10l1-14" /><path d="m9 7 1-3h4l1 3" /></svg>
+          </button>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar" aria-label="Editor toolbar">
+          <div class="toolbar-tools">
+            <button class="tool-button is-active" type="button" aria-label="Play preview">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7Z" /></svg>
+            </button>
+            <button class="tool-button" type="button" aria-label="Select">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3 19 14l-7 1-3 6Z" /></svg>
+            </button>
+            <button class="tool-button" type="button" aria-label="Hand">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 12V7a2 2 0 0 1 4 0v4" /><path d="M12 11V6a2 2 0 0 1 4 0v7" /><path d="M16 12V9a2 2 0 0 1 4 0v5c0 4-3 7-7 7h-2c-3 0-6-3-6-6v-4a2 2 0 0 1 4 0v1" /></svg>
+            </button>
+            <button class="tool-button" type="button" aria-label="Zoom">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6" /><path d="m16 16 4 4" /></svg>
+            </button>
+            <button class="tool-button" type="button" aria-label="Crop">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3v15h15" /><path d="M3 6h15v15" /></svg>
+            </button>
+            <button class="tool-button" type="button" aria-label="Pen">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 20 5-1 10-10-4-4L5 15Z" /><path d="m14 6 4 4" /></svg>
+            </button>
+            <button class="tool-button" type="button" aria-label="Text">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14" /><path d="M12 5v14" /></svg>
+            </button>
+            <button class="tool-button" type="button" aria-label="Spark">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 14 9l6 3-6 3-2 6-2-6-6-3 6-3Z" /></svg>
+            </button>
+          </div>
+          <div class="toolbar-actions">
+            <button class="tool-button" type="button" aria-label="Undo">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7 4 12l5 5" /><path d="M4 12h10a5 5 0 0 1 0 10" /></svg>
+            </button>
+            <button class="tool-button" type="button" aria-label="Redo">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 7 5 5-5 5" /><path d="M20 12H10a5 5 0 0 0 0 10" /></svg>
+            </button>
+            <button class="preview-button" id="previewButton" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7Z" /></svg>
+              <span>Preview</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5" /></svg>
+            </button>
+            <button class="export-button" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12" /><path d="m7 8 5-5 5 5" /><path d="M5 14v5h14v-5" /></svg>
+              <span>Export</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5" /></svg>
+            </button>
+            <button class="tool-button" type="button" aria-label="Share">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v10" /><path d="m8 9 4-4 4 4" /><path d="M5 14v5h14v-5" /></svg>
+            </button>
+          </div>
+        </header>
+
+        <section class="stage-wrap" aria-label="Composition canvas">
+          <div class="ruler ruler-x" aria-hidden="true"></div>
+          <div class="ruler ruler-y" aria-hidden="true"></div>
+          <div class="stage" id="stage">
+            <div class="constellation constellation-left" aria-hidden="true">
+              <span></span><span></span><span></span><span></span>
+            </div>
+            <div class="constellation constellation-right" aria-hidden="true">
+              <span></span><span></span><span></span><span></span>
+            </div>
+            <div class="canvas-meta scene-meta">
+              <i></i><span>Scene 03</span>
+            </div>
+            <div class="canvas-meta brand-meta">
+              <span>Motion Lab</span><i></i>
+            </div>
+            <div class="orbit-system" aria-hidden="true">
+              <span class="orbit-ring orbit-a"></span>
+              <span class="orbit-ring orbit-b"></span>
+              <span class="orbit-ring orbit-c"></span>
+              <span class="orbit-planet planet-a"></span>
+              <span class="orbit-planet planet-b"></span>
+              <span class="orbit-planet planet-c"></span>
+            </div>
+            <div class="title-card" aria-label="Orbit Title composition">
+              <span class="title-top">Orbit</span>
+              <span class="title-main">Title</span>
+              <span class="title-sub">Motion Design</span>
+            </div>
+            <div class="frame-meta">
+              <span><i></i> 120 FPS</span>
+              <span>00:02:15 <i></i></span>
+            </div>
+          </div>
+          <div class="canvas-footer">
+            <button class="zoom-button" id="zoomButton" type="button">100%</button>
+            <button class="icon-button" type="button" aria-label="Fit canvas">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5" /><path d="M16 3h5v5" /><path d="M8 21H3v-5" /><path d="M16 21h5v-5" /></svg>
+            </button>
+            <div class="transport" aria-label="Playback controls">
+              <button class="icon-button" type="button" aria-label="Previous keyframe">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6v12" /><path d="m18 6-8 6 8 6Z" /></svg>
+              </button>
+              <button class="icon-button" type="button" aria-label="Step back">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m11 6-8 6 8 6Z" /><path d="m21 6-8 6 8 6Z" /></svg>
+              </button>
+              <button class="play-button" id="playButton" type="button" aria-label="Play">
+                <svg class="play-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7Z" /></svg>
+                <svg class="pause-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7Z" /><path d="M13 5h4v14h-4Z" /></svg>
+              </button>
+              <button class="icon-button" type="button" aria-label="Step forward">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m13 6 8 6-8 6Z" /><path d="m3 6 8 6-8 6Z" /></svg>
+              </button>
+              <button class="icon-button" type="button" aria-label="Next keyframe">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6v12" /><path d="m6 6 8 6-8 6Z" /></svg>
+              </button>
+            </div>
+            <div class="timecode"><span id="timecode">00215</span><em>/</em><span>00480</span></div>
+            <button class="icon-button" type="button" aria-label="Fullscreen">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5" /><path d="M16 3h5v5" /><path d="M8 21H3v-5" /><path d="M16 21h5v-5" /></svg>
+            </button>
+          </div>
+        </section>
+
+        <section class="timeline-panel" aria-label="Timeline">
+          <div class="timeline-tabs">
+            <button class="is-active" type="button">Timeline</button>
+            <button type="button">Keyframes</button>
+          </div>
+          <div class="timeline-head">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="timeline-grid" id="timelineGrid">
+            <div class="track-names">
+              <button class="track-name" type="button"><span>T</span><b>Orbit Title</b><i></i></button>
+              <button class="track-name" type="button"><span>T</span><b>ORBIT</b><i></i></button>
+              <button class="track-name" type="button"><span>T</span><b>TITLE</b><i></i></button>
+              <button class="track-name" type="button"><span>T</span><b>Subtitle</b><i></i></button>
+              <button class="track-name" type="button"><span></span><b>Planet</b><i></i></button>
+              <button class="track-name" type="button"><span></span><b>Orbit Rings</b><i></i></button>
+              <button class="track-name" type="button"><span></span><b>Glow</b><i></i></button>
+            </div>
+            <div class="property-names">
+              <span>Position</span><span>Opacity</span><span>Scale</span><span>Position</span><span>Rotation</span><span>Scale</span><span>Opacity</span>
+            </div>
+            <div class="track-area" id="trackArea">
+              <div class="frame-ruler">
+                <span>00000</span><span>00060</span><span>00120</span><span>00180</span><span>00240</span><span>00300</span><span>00360</span><span>00420</span><span>00480</span>
+              </div>
+              <div class="playhead" id="playhead"><span>00215</span></div>
+              <div class="track-row title-track"><i class="bar purple b1"></i><i class="key k1"></i><i class="key k2"></i><i class="key k3"></i><i class="key k4"></i></div>
+              <div class="track-row orbit-track"><i class="bar purple b2"></i><i class="key k5"></i><i class="key k6"></i><i class="key k7"></i></div>
+              <div class="track-row main-track"><i class="bar orange b3"></i><i class="key k8"></i><i class="key k9"></i><i class="key k10"></i><i class="key k11"></i></div>
+              <div class="track-row subtitle-track"><i class="path-line"></i><i class="key k12"></i><i class="key k13"></i><i class="key k14"></i></div>
+              <div class="track-row planet-track"><i class="bar cyan b4"></i><i class="curve"></i><i class="key k15"></i><i class="key k16"></i><i class="key k17"></i><i class="key k18"></i></div>
+              <div class="track-row rings-track"><i class="bar amber b5"></i><i class="key k19"></i><i class="key k20"></i><i class="key k21"></i></div>
+              <div class="track-row glow-track"><i class="bar amber b6"></i><i class="key k22"></i><i class="key k23"></i><i class="key k24"></i><i class="key k25"></i></div>
+            </div>
+          </div>
+          <div class="status-bar">
+            <button class="snap-button is-on" id="snapButton" type="button">Snap: ON</button>
+            <button class="icon-button" type="button" aria-label="Magnet">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4v8a6 6 0 0 0 12 0V4h-4v8a2 2 0 0 1-4 0V4Z" /></svg>
+            </button>
+            <button class="icon-button" type="button" aria-label="Lock">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2" /><path d="M8 10V7a4 4 0 0 1 8 0v3" /></svg>
+            </button>
+          </div>
+        </section>
+      </main>
+
+      <aside class="inspector-panel panel" aria-label="Inspector">
+        <div class="panel-head inspector-head">
+          <h2>Inspector</h2>
+          <button class="icon-button" type="button" aria-label="Inspector menu">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16" /><path d="M4 12h16" /><path d="M4 17h16" /></svg>
+          </button>
+        </div>
+        <div class="tab-set" role="tablist" aria-label="Inspector tabs">
+          <button type="button" role="tab">Design</button>
+          <button class="is-active" type="button" role="tab">Animate</button>
+          <button type="button" role="tab">Effects</button>
+        </div>
+        <section class="inspector-section">
+          <h3>Animation Presets</h3>
+          <div class="preset-grid">
+            <button class="preset-card" type="button" data-preset="Fade In"><span>Aa</span><b>Fade In</b></button>
+            <button class="preset-card" type="button" data-preset="Slide Up"><span>Aa</span><i></i><b>Slide Up</b></button>
+            <button class="preset-card is-selected" type="button" data-preset="Orbit In"><span>Aa</span><em></em><b>Orbit In</b></button>
+            <button class="preset-card" type="button" data-preset="Scale In"><span>Aa</span><b>Scale In</b></button>
+            <button class="preset-card" type="button" data-preset="Rotate In"><span>Aa</span><i></i><b>Rotate In</b></button>
+            <button class="preset-card" type="button" data-preset="Text Flicker"><span>Ta</span><b>Text Flicker</b></button>
+          </div>
+        </section>
+        <section class="inspector-section">
+          <h3><span id="presetTitle">Orbit In</span> Settings</h3>
+          <label class="field-row">
+            <span>Path</span>
+            <select aria-label="Path"><option>Circular</option><option>Elliptic</option><option>Spiral</option></select>
+          </label>
+          <label class="field-row">
+            <span>Direction</span>
+            <select aria-label="Direction"><option>Clockwise</option><option>Counter</option></select>
+          </label>
+          <label class="field-row">
+            <span>Speed</span>
+            <input type="text" value="360.0" aria-label="Speed" />
+          </label>
+          <label class="field-row">
+            <span>Radius</span>
+            <input type="text" value="540.0" aria-label="Radius" />
+          </label>
+          <label class="field-row">
+            <span>Start Angle</span>
+            <input type="text" value="-90.0" aria-label="Start angle" />
+          </label>
+          <label class="field-row">
+            <span>End Angle</span>
+            <input type="text" value="270.0" aria-label="End angle" />
+          </label>
+          <label class="field-row">
+            <span>Easing</span>
+            <select aria-label="Easing"><option>Ease Out</option><option>Ease In</option><option>Linear</option></select>
+          </label>
+        </section>
+        <section class="inspector-section">
+          <h3>Layer Properties</h3>
+          <div class="dual-field">
+            <span>Position</span>
+            <label>X <input type="text" value="0.0" aria-label="X position" /></label>
+            <label>Y <input type="text" value="0.0" aria-label="Y position" /></label>
+          </div>
+          <div class="dual-field">
+            <span>Scale</span>
+            <label>X <input type="text" value="100.0%" aria-label="X scale" /></label>
+            <label>Y <input type="text" value="100.0%" aria-label="Y scale" /></label>
+          </div>
+          <label class="field-row">
+            <span>Rotation</span>
+            <input type="text" value="0.0" aria-label="Rotation" />
+          </label>
+          <label class="range-row">
+            <span>Opacity</span>
+            <input id="opacitySlider" type="range" min="35" max="100" value="100" aria-label="Opacity" />
+            <output id="opacityValue">100%</output>
+          </label>
+        </section>
+      </aside>
+    </div>
+
+    <script src="motion-lab-core.js"></script>
+    <script src="motion-lab.js"></script>
+  </body>
+</html>

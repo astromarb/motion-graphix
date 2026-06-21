@@ -1,0 +1,11 @@
+{
+  "name": "motion-graphix",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Static motion graphics editor prototype.",
+  "scripts": {
+    "test": "node --test",
+    "smoke": "node --test test/motion-lab-core.test.js"
+  },
+  "devDependencies": {}
+}
