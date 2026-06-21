@@ -1,6 +1,7 @@
 const root = document.querySelector(".app-shell");
 const playButton = document.getElementById("playButton");
 const previewButton = document.getElementById("previewButton");
+const themeToggle = document.getElementById("themeToggle");
 const trackArea = document.getElementById("trackArea");
 const timelineGrid = document.getElementById("timelineGrid");
 const playhead = document.getElementById("playhead");
@@ -20,6 +21,51 @@ const nowMs = () => (supportsPerformanceNow ? performance.now() : Date.now());
 const requestFrame = typeof requestAnimationFrame === "function" ? requestAnimationFrame : (fn) => setTimeout(() => fn(nowMs()), 16);
 const cancelFrame = typeof cancelAnimationFrame === "function" ? cancelAnimationFrame : clearTimeout;
 const canUsePointer = typeof window.PointerEvent !== "undefined";
+const THEME_KEY = "motionLab.theme";
+const systemThemeLightMedia = window.matchMedia?.("(prefers-color-scheme: light)");
+
+const getStoredTheme = () => {
+  if (!window.localStorage) return null;
+  try {
+    return window.localStorage.getItem(THEME_KEY);
+  } catch (error) {
+    return null;
+  }
+};
+
+const setStoredTheme = (theme) => {
+  if (!window.localStorage) return;
+  try {
+    window.localStorage.setItem(THEME_KEY, theme);
+  } catch (error) {
+    // localStorage can be unavailable in restricted or private contexts.
+  }
+};
+
+const resolveInitialTheme = () => {
+  const stored = getStoredTheme();
+  if (stored === "light" || stored === "dark") return stored;
+  return systemThemeLightMedia?.matches ? "light" : "dark";
+};
+
+const syncThemeToggle = (theme) => {
+  if (!themeToggle) return;
+  if (theme === "light") {
+    themeToggle.textContent = "Dark";
+    themeToggle.setAttribute("aria-label", "Switch to dark mode");
+  } else {
+    themeToggle.textContent = "Light";
+    themeToggle.setAttribute("aria-label", "Switch to light mode");
+  }
+};
+
+const setTheme = (theme) => {
+  if (!root) return;
+  const nextTheme = theme === "light" ? "light" : "dark";
+  root.dataset.theme = nextTheme;
+  syncThemeToggle(nextTheme);
+  setStoredTheme(nextTheme);
+};
 
 const bindControl = (button, handler) => {
   if (!button) return;
@@ -130,6 +176,7 @@ const endScrub = (event) => {
 
 bindControl(playButton, () => setPlaying(!state.playing));
 bindControl(previewButton, () => setPlaying(!state.playing));
+bindControl(themeToggle, () => setTheme(root.dataset.theme === "light" ? "dark" : "light"));
 
 if (canUsePointer && trackArea) {
   trackArea.addEventListener("pointerdown", (event) => {
@@ -212,3 +259,4 @@ window.addEventListener("keydown", (event) => {
 });
 
 setFrame(state.frame);
+setTheme(resolveInitialTheme());

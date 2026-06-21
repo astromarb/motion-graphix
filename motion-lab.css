@@ -24,6 +24,7 @@
   --inspector: 344px;
   --topbar: 62px;
   --timeline: 300px;
+  --theme-transition: 200ms;
 }
 
 * {
@@ -43,6 +44,9 @@ body {
   color: var(--paper);
   font-family: var(--f-body);
   font-size: 14px;
+  transition:
+    background var(--theme-transition) ease,
+    color var(--theme-transition) ease;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -78,10 +82,27 @@ svg {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  transition: filter var(--theme-transition) ease;
   background:
     radial-gradient(circle at 78% 18%, rgba(168, 140, 255, 0.16), transparent 31%),
     radial-gradient(circle at 32% 95%, rgba(121, 212, 239, 0.11), transparent 34%),
     linear-gradient(135deg, #05060c, #0c111a 52%, #05070d);
+}
+
+.app-shell[data-theme="light"] {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+.app-shell,
+.app-shell * {
+  transition:
+    color var(--theme-transition) ease,
+    background-color var(--theme-transition) ease,
+    background var(--theme-transition) ease,
+    border-color var(--theme-transition) ease,
+    fill var(--theme-transition) ease,
+    stroke var(--theme-transition) ease,
+    box-shadow var(--theme-transition) ease;
 }
 
 .panel,
@@ -450,6 +471,17 @@ svg {
   align-items: center;
   gap: 8px;
   min-width: 0;
+}
+
+.theme-toggle {
+  min-width: 56px;
+  padding: 0 11px;
+  border-radius: 4px;
+  border: 1px solid var(--line-strong);
+  background: rgba(255, 255, 255, 0.045);
+  color: var(--paper);
+  font-size: 11px;
+  font-weight: 700;
 }
 
 .preview-button,
