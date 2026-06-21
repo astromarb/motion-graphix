@@ -15,6 +15,44 @@ const layerRows = [...document.querySelectorAll(".layer-row")];
 const presetCards = [...document.querySelectorAll(".preset-card")];
 const core = window.MotionLabCore;
 
+const supportsPerformanceNow = typeof performance !== "undefined" && typeof performance.now === "function";
+const nowMs = () => (supportsPerformanceNow ? performance.now() : Date.now());
+const requestFrame = typeof requestAnimationFrame === "function" ? requestAnimationFrame : (fn) => setTimeout(() => fn(nowMs()), 16);
+const cancelFrame = typeof cancelAnimationFrame === "function" ? cancelAnimationFrame : clearTimeout;
+const canUsePointer = typeof window.PointerEvent !== "undefined";
+
+const bindControl = (button, handler) => {
+  if (!button) return;
+
+  let lastTrigger = 0;
+  const trigger = (event) => {
+    const now = nowMs();
+    if (now - lastTrigger < 75) return;
+    lastTrigger = now;
+
+    if (event && event.cancelable) event.preventDefault();
+    handler(event);
+  };
+
+  button.addEventListener("click", trigger);
+  button.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    event.preventDefault();
+    trigger(event);
+  });
+
+  if (canUsePointer) {
+    button.addEventListener("pointerup", (event) => {
+      if (event.pointerType === "touch" || event.pointerType === "pen") trigger(event);
+    });
+  } else if ("ontouchstart" in window) {
+    button.addEventListener("touchend", (event) => {
+      if (event.cancelable) event.preventDefault();
+      trigger(event);
+    }, { passive: false });
+  }
+};
+
 const state = {
   playing: false,
   frame: 215,
@@ -43,10 +81,10 @@ const setPlaying = (playing) => {
   root.dataset.playing = String(playing);
   playButton.setAttribute("aria-label", playing ? "Pause" : "Play");
   if (playing) {
-    state.lastTime = performance.now();
-    state.raf = requestAnimationFrame(tick);
+    state.lastTime = nowMs();
+    state.raf = requestFrame(tick);
   } else if (state.raf) {
-    cancelAnimationFrame(state.raf);
+    cancelFrame(state.raf);
     state.raf = null;
   }
 };
@@ -55,36 +93,80 @@ function tick(time) {
   const delta = time - state.lastTime;
   state.lastTime = time;
   setFrame(core.nextPlaybackFrame(state.frame, delta, { maxFrame: state.maxFrame, frameMs: 18 }));
-  if (state.playing) state.raf = requestAnimationFrame(tick);
+  if (state.playing) state.raf = requestFrame(tick);
 }
 
 const seekFromEvent = (event) => {
   const rect = trackArea.getBoundingClientRect();
-  const pct = (event.clientX - rect.left) / rect.width;
+  const x = event && "clientX" in event ? event.clientX : null;
+  if (x === null || Number.isNaN(x)) return;
+  const pct = (x - rect.left) / rect.width;
   setFrame(pct * state.maxFrame);
 };
 
-playButton.addEventListener("click", () => setPlaying(!state.playing));
-previewButton.addEventListener("click", () => setPlaying(!state.playing));
+const setScrubbing = (active) => {
+  trackArea.dataset.scrubbing = String(active);
+};
 
-trackArea.addEventListener("pointerdown", (event) => {
+const beginScrub = (event) => {
   seekFromEvent(event);
-  trackArea.setPointerCapture(event.pointerId);
-});
+  setScrubbing(true);
+  if (canUsePointer && typeof trackArea.setPointerCapture === "function") {
+    trackArea.setPointerCapture(event.pointerId);
+  }
+};
 
-trackArea.addEventListener("pointermove", (event) => {
-  if (event.buttons !== 1) return;
+const moveScrub = (event) => {
+  if (trackArea.dataset.scrubbing !== "true") return;
   seekFromEvent(event);
-});
+};
 
-snapButton.addEventListener("click", () => {
+const endScrub = (event) => {
+  setScrubbing(false);
+  if (canUsePointer && event && typeof trackArea.releasePointerCapture === "function") {
+    trackArea.releasePointerCapture(event.pointerId);
+  }
+};
+
+bindControl(playButton, () => setPlaying(!state.playing));
+bindControl(previewButton, () => setPlaying(!state.playing));
+
+if (canUsePointer && trackArea) {
+  trackArea.addEventListener("pointerdown", (event) => {
+    if (event.pointerType !== "mouse" && event.pointerType !== "touch" && event.pointerType !== "pen") return;
+    beginScrub(event);
+  });
+  trackArea.addEventListener("pointermove", moveScrub);
+  trackArea.addEventListener("pointerup", endScrub);
+  trackArea.addEventListener("pointercancel", endScrub);
+  trackArea.addEventListener("pointerleave", endScrub);
+}
+
+if (!canUsePointer && trackArea) {
+  trackArea.addEventListener("touchstart", (event) => {
+    const touch = event.changedTouches && event.changedTouches[0];
+    if (!touch) return;
+    event.preventDefault();
+    beginScrub({ clientX: touch.clientX });
+  });
+  trackArea.addEventListener("touchmove", (event) => {
+    const touch = event.changedTouches && event.changedTouches[0];
+    event.preventDefault();
+    if (!touch) return;
+    moveScrub({ clientX: touch.clientX });
+  });
+  trackArea.addEventListener("touchend", endScrub);
+  trackArea.addEventListener("touchcancel", endScrub);
+}
+
+bindControl(snapButton, () => {
   state.snap = !state.snap;
   snapButton.classList.toggle("is-on", state.snap);
   snapButton.textContent = state.snap ? "Snap: ON" : "Snap: OFF";
   setFrame(state.frame);
 });
 
-zoomButton.addEventListener("click", () => {
+bindControl(zoomButton, () => {
   const next = core.nextZoom(state.zoomIndex, state.zooms);
   state.zoomIndex = next.index;
   const zoom = next.zoom;
@@ -99,14 +181,14 @@ opacitySlider.addEventListener("input", () => {
 });
 
 layerRows.forEach((row) => {
-  row.addEventListener("click", () => {
+  bindControl(row, () => {
     layerRows.forEach((item) => item.classList.remove("is-selected"));
     row.classList.add("is-selected");
   });
 });
 
 presetCards.forEach((card) => {
-  card.addEventListener("click", () => {
+  bindControl(card, () => {
     presetCards.forEach((item) => item.classList.remove("is-selected"));
     card.classList.add("is-selected");
     presetTitle.textContent = card.dataset.preset;

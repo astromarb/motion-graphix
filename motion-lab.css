@@ -56,6 +56,8 @@ select {
 button {
   color: inherit;
   cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 svg {
@@ -984,6 +986,7 @@ svg {
 .track-area {
   position: relative;
   overflow: hidden;
+  touch-action: none;
   background:
     linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px) 0 28px / 80px 100%,
     linear-gradient(180deg, rgba(255, 255, 255, 0.055) 1px, transparent 1px) 0 28px / 100% 32px;
@@ -1317,6 +1320,7 @@ svg {
 
 input[type="range"] {
   accent-color: var(--orange);
+  touch-action: none;
 }
 
 .range-row output {
